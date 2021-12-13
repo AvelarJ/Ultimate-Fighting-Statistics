@@ -191,6 +191,8 @@ private: // private member variables
   QLineEdit *betFighterID;
   QLineEdit *betWinning;
 
+  QPushButton *betFormSubmit;
+
 
   QLabel *firstNameA;
   QLabel *lastNameA;

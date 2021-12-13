@@ -353,16 +353,16 @@ void Cache::updateCacheFromFile() {
             }
             myfile.close(); // close file input stream
             
-            Bet* newBet1 = new Bet(1,"newBet",25,2,3,140000001,true,true);
+            Bet* newBet1 = new Bet(1,"newBet",25.5,219,3,140000001,true,true);
             addBet(1,newBet1);
 
-            Bet* newBet2 = new Bet(1,"newBet",25,2,3,140000002,true,true);
+            Bet* newBet2 = new Bet(2,"Vegas Bet",500.54,214,3,140000002,true,true);
             addBet(2,newBet2);
 
-            Bet* newBet3 = new Bet(1,"newBet",25,2,3,140000003,true,true);
+            Bet* newBet3 = new Bet(3,"Fight bet",10000,220,3,140000003,true,true);
             addBet(3,newBet3);
 
-            Bet* newBet4 = new Bet(1,"newBet",25,2,3,140000004,true,true);
+            Bet* newBet4 = new Bet(4,"Sample bet",250,216,3,140000004,true,true);
             addBet(4,newBet4);
 
             for(long unsigned int i = 0; i < rawFighters.size(); i++) { // loop through raw fighter strings

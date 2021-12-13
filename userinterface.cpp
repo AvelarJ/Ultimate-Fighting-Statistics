@@ -365,7 +365,7 @@ void UserInterface::onUpdateScheduleButton() //update schedule on button press
         token = strtok(NULL,"T");
         if(atoi(token) == day)
         {
-          std::string eventFound = "Event found for this date:\n\n" + it->second->getName();
+          std::string eventFound = "Event found for this date:\n\n" + it->second->getName() + " -- " + std::to_string(it->second->getEventID());
           eventDateTimeDup = strdup(it->second->getDateTime().c_str());
           std::string str = strtok(eventDateTimeDup,"T");
           eventFound = eventFound + "\n\nDate: " + str;
@@ -446,17 +446,23 @@ void UserInterface::onListFightersButtonReleased() //Show a list of fighters whe
 
 /**
  * \brief Function to add/remove/edit and view bets
- * \details Handles the comparing of two fighters and sets up the new view for it as well
+ * \details Handles the viewing of bets, the bets are iterated over from the bets map and then
+ * they are added one by one to the QList widget which is added to the CenterViewbets layout
+ * The iterator finds the associated fighter and shows their name to make viewing the bet 
+ * information easier. Also a form has been set up to add a bet to the system but since
+ * there are no public methods to add something to the static cache, and no other group member has 
+ * implemented a user story that ADDS something to the cache, there is no code I can look to for guidance
+ * on this.I tried to implement as much as possible since I cannot consult with my group at this time
  * \authors Omer Noor
  */
 
-void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when Button is pressed
+void UserInterface::onViewBetsButtonReleased() //Show bets and bet form when button is pressed
 {
-  if (checkViewBetsIsSet == false) //if calling function for first time, initialize schedule window
+  if (checkViewBetsIsSet == false) //if calling function for first time, initialize bets window
   {   
     checkViewBetsIsSet = true;
     m_centerViewBets = new QListWidget(); //QList widget
-    m_centerViewBetsLayout = new QVBoxLayout();
+    m_centerViewBetsLayout = new QVBoxLayout(); //Layout for the bets page
     m_centerViewBetsPanel = new QFrame(this);
 
     m_centerViewBetsPanel->setFixedWidth(screen.width() * (7.0 / 12.0) - 10);
@@ -464,24 +470,53 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
     m_centerViewBetsPanel->setFrameStyle(QFrame::Panel);
     m_centerViewBetsPanel->setFixedHeight(screen.height() - 50);
 
-    QString placeholderText = "The view bets page is a work in progress";
+    QString placeholderText = "Here are the list of bets:";
+    QString placeholderText2 = "";
     m_centerViewBets->addItem(placeholderText);
+     m_centerViewBets->addItem(placeholderText2);
 
     m_centerViewBetsLayout->addWidget(m_centerViewBets);
     m_centerViewBetsPanel->setLayout(m_centerViewBetsLayout);
-    m_mainLayout->addWidget(m_centerViewBetsPanel, 0, 2); //Adding schedule Panel as the center panel
+    m_mainLayout->addWidget(m_centerViewBetsPanel, 0, 2); //Adding bets Panel as the center panel
 
     std::map<int, Bet*> betMap = Cache::getBets();
     std::pair<int, Bet*> individualBet;
 
-    betID = new QLineEdit("Bet ID");
-    betTitle = new QLineEdit("Bet Title");
-    betAmount = new QLineEdit("Bet Amount");
-    betEventID = new QLineEdit("Event ID");
-    betFightID = new QLineEdit("Fight ID");
-    betFighterID = new QLineEdit("Fighter ID");
-    betWinning = new QLineEdit("Winning (Enter 'Yes' or 'No'");
+    //Set up the form to add bets 
 
+    //Set the place holder text for each line edit item as well as validate the values according
+    // to what we need for the cache
+    betID = new QLineEdit();  
+    betID->setPlaceholderText("Bet ID");
+    betID->setValidator(new QIntValidator(0,100,this));
+
+
+    betTitle = new QLineEdit();
+    betTitle->setPlaceholderText("Bet Title");
+    
+    betAmount = new QLineEdit();
+    betID->setValidator(new QDoubleValidator(0.0,1000000.0,2));
+    betAmount->setPlaceholderText("Bet Amount (Up to 1m)");
+
+    betEventID = new QLineEdit();
+    betEventID->setPlaceholderText("Bet Event ID");
+    betEventID->setValidator(new QIntValidator(0,100,this));
+
+    betFightID = new QLineEdit();
+    betFightID->setPlaceholderText("Bet Fight ID");
+    betFightID->setValidator(new QIntValidator(0,100,this));
+
+    betFighterID = new QLineEdit();
+    betFighterID->setPlaceholderText("Bet Fighter ID");
+    betFighterID->setValidator(new QIntValidator(0,100,this));
+    
+    betWinning = new QLineEdit();
+    betWinning->setPlaceholderText("Bet Winning? (enter 'yes' or 'no')");
+    
+    //Button To enter the bet
+    betFormSubmit = new QPushButton("Enter Bet");
+
+    //Add these components to the layout
     m_centerViewBetsLayout->addWidget(betID);
     m_centerViewBetsLayout->addWidget(betTitle);
     m_centerViewBetsLayout->addWidget(betAmount);
@@ -490,8 +525,11 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
     m_centerViewBetsLayout->addWidget(betFighterID);
     m_centerViewBetsLayout->addWidget(betWinning);
 
+    m_centerViewBetsLayout->addWidget(betFormSubmit);
 
-    BOOST_FOREACH(individualBet, betMap) {         
+    //Loop through all the bets and then print them on the UI
+    BOOST_FOREACH(individualBet, betMap) {            
+             
       QString betID = QString::fromStdString(std::to_string(individualBet.second->getBetID()));   
       QString label = QString::fromStdString("Bet ID: ");
       m_centerViewBets->addItem(label + betID);  
@@ -517,15 +555,18 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
       QString betFighterName = QString::fromStdString(fighter->getFirstName()+" "+fighter->getLastName());   
       label = QString::fromStdString("Fighter Name: ");
       m_centerViewBets->addItem(label + betFighterName);  
+
+      Event* event = Cache::getEvent(individualBet.second->getEventID());
+
+      QString betEventName = QString::fromStdString(event->getName());   
+      label = QString::fromStdString("Event Name: ");
+      m_centerViewBets->addItem(label + betEventName);  
+
+      QString line = QString::fromStdString("");
+      m_centerViewBets->addItem(line);
   }
 
-
-  
-
-
-
-
-  }
+}
   
     
   
@@ -533,8 +574,8 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
 
 
   removeCenterPanel(); //remove any other window
-  m_centerViewBetsPanel -> setVisible(true); //set schedule window visible
-  currentCenterPanel = "viewbets"; //current window is schedule
+  m_centerViewBetsPanel -> setVisible(true); //set bets window visible
+  currentCenterPanel = "viewbets"; //current window is bets
 
   m_viewBetsButton -> setProperty("released", true);
   m_viewBetsButton -> style() -> unpolish(m_viewBetsButton); //change colour of button
