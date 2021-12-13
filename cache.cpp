@@ -353,8 +353,17 @@ void Cache::updateCacheFromFile() {
             }
             myfile.close(); // close file input stream
             
-            Bet newBet(1,"newBet",25,2,3,3,true,true);
-            addBet(1,&newBet);
+            Bet* newBet1 = new Bet(1,"newBet",25,2,3,140000001,true,true);
+            addBet(1,newBet1);
+
+            Bet* newBet2 = new Bet(1,"newBet",25,2,3,140000002,true,true);
+            addBet(2,newBet2);
+
+            Bet* newBet3 = new Bet(1,"newBet",25,2,3,140000003,true,true);
+            addBet(3,newBet3);
+
+            Bet* newBet4 = new Bet(1,"newBet",25,2,3,140000004,true,true);
+            addBet(4,newBet4);
 
             for(long unsigned int i = 0; i < rawFighters.size(); i++) { // loop through raw fighter strings
                 Fighter* fighter = parseFighter(rawFighters[i]); // deserialize fighter into heap allocated object

@@ -183,6 +183,15 @@ private: // private member variables
   QLineEdit *searchA;                 // Search bar
   QLineEdit *searchB;
 
+  QLineEdit *betID;                 // Form to enter a new bet
+  QLineEdit *betTitle;
+  QLineEdit *betAmount;
+  QLineEdit *betEventID;
+  QLineEdit *betFightID;
+  QLineEdit *betFighterID;
+  QLineEdit *betWinning;
+
+
   QLabel *firstNameA;
   QLabel *lastNameA;
   QLabel *weightClassA;

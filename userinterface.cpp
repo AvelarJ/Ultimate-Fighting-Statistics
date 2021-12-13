@@ -419,7 +419,7 @@ void UserInterface::onListFightersButtonReleased() //Show a list of fighters whe
     std::map<int, Fighter*> fighterMap = Cache::getFighters();
     std::pair<int, Fighter*> individual_fighter;
     BOOST_FOREACH(individual_fighter, fighterMap) {
-      QString fighter_name = QString::fromStdString(individual_fighter.second->getFirstName() + " " + individual_fighter.second->getLastName());
+      QString fighter_name = QString::fromStdString(individual_fighter.second->getFirstName() + " " + individual_fighter.second->getLastName()+" -- "+std::to_string(individual_fighter.second->getFighterID()));
       
       m_centerFighterList->addItem(fighter_name);
     }
@@ -470,19 +470,65 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
     m_centerViewBetsLayout->addWidget(m_centerViewBets);
     m_centerViewBetsPanel->setLayout(m_centerViewBetsLayout);
     m_mainLayout->addWidget(m_centerViewBetsPanel, 0, 2); //Adding schedule Panel as the center panel
+
+    std::map<int, Bet*> betMap = Cache::getBets();
+    std::pair<int, Bet*> individualBet;
+
+    betID = new QLineEdit("Bet ID");
+    betTitle = new QLineEdit("Bet Title");
+    betAmount = new QLineEdit("Bet Amount");
+    betEventID = new QLineEdit("Event ID");
+    betFightID = new QLineEdit("Fight ID");
+    betFighterID = new QLineEdit("Fighter ID");
+    betWinning = new QLineEdit("Winning (Enter 'Yes' or 'No'");
+
+    m_centerViewBetsLayout->addWidget(betID);
+    m_centerViewBetsLayout->addWidget(betTitle);
+    m_centerViewBetsLayout->addWidget(betAmount);
+    m_centerViewBetsLayout->addWidget(betEventID);
+    m_centerViewBetsLayout->addWidget(betFightID);
+    m_centerViewBetsLayout->addWidget(betFighterID);
+    m_centerViewBetsLayout->addWidget(betWinning);
+
+
+    BOOST_FOREACH(individualBet, betMap) {         
+      QString betID = QString::fromStdString(std::to_string(individualBet.second->getBetID()));   
+      QString label = QString::fromStdString("Bet ID: ");
+      m_centerViewBets->addItem(label + betID);  
+
+      QString betTitle = QString::fromStdString(individualBet.second->getTitle());   
+      label = QString::fromStdString("Bet Title: ");
+      m_centerViewBets->addItem(label + betTitle);  
+
+      QString betAmount = QString::fromStdString(std::to_string(individualBet.second->getAmount()));   
+      label = QString::fromStdString("Bet Amount: $");
+      m_centerViewBets->addItem(label + betAmount);  
+
+      QString betEventID = QString::fromStdString(std::to_string(individualBet.second->getEventID()));   
+      label = QString::fromStdString("Event ID: ");
+      m_centerViewBets->addItem(label + betEventID);  
+
+      QString betFighterID = QString::fromStdString(std::to_string(individualBet.second->getFighterID()));   
+      label = QString::fromStdString("Fighter ID: ");
+      m_centerViewBets->addItem(label + betFighterID);  
+      
+      Fighter* fighter = Cache::getFighter(individualBet.second->getFighterID());
+
+      QString betFighterName = QString::fromStdString(fighter->getFirstName()+" "+fighter->getLastName());   
+      label = QString::fromStdString("Fighter Name: ");
+      m_centerViewBets->addItem(label + betFighterName);  
+  }
+
+
+  
+
+
+
+
   }
   
     
-  std::map<int, Bet*> betMap = Cache::getBets();
-  std::pair<int, Bet*> individualBet;
-
-  BOOST_FOREACH(individualBet, betMap) {
-    std::string x = individualBet.second->getTitle();
-    std::cout << x << std::endl;
-    // QString fName = QString::fromStdString(individualBet.second->getTitle());   
-    // QString label = QString::fromStdString("Bet ID: ");
-    // m_centerDisplayFighter->addItem(label + fName);  
-  }
+  
   
 
 
