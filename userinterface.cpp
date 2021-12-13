@@ -453,6 +453,11 @@ void UserInterface::onListFightersButtonReleased() //Show a list of fighters whe
  * there are no public methods to add something to the static cache, and no other group member has 
  * implemented a user story that ADDS something to the cache, there is no code I can look to for guidance
  * on this.I tried to implement as much as possible since I cannot consult with my group at this time
+ * I have created sample bet data in cache so that you can see what the bets page would look like
+ * One way to implement the add/remove/edit user story would be to make the addBet/removeBet/and editBet functions from cache 
+ * public and then bind the release of the submit button on the form to another function in userinterface
+ * the function would get the values of the heap allocated QLineEdit items and then validate and add/edit/delete
+*  from the cache accordingly
  * \authors Omer Noor
  */
 
