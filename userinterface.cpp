@@ -444,6 +444,12 @@ void UserInterface::onListFightersButtonReleased() //Show a list of fighters whe
 
 }
 
+/**
+ * \brief Function to add/remove/edit and view bets
+ * \details Handles the comparing of two fighters and sets up the new view for it as well
+ * \authors Omer Noor
+ */
+
 void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when Button is pressed
 {
   if (checkViewBetsIsSet == false) //if calling function for first time, initialize schedule window
