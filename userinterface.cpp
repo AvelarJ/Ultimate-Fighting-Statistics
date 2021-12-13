@@ -453,7 +453,7 @@ void UserInterface::onListFightersButtonReleased() //Show a list of fighters whe
 void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when Button is pressed
 {
   if (checkViewBetsIsSet == false) //if calling function for first time, initialize schedule window
-  {
+  {   
     checkViewBetsIsSet = true;
     m_centerViewBets = new QListWidget(); //QList widget
     m_centerViewBetsLayout = new QVBoxLayout();
@@ -471,6 +471,19 @@ void UserInterface::onViewBetsButtonReleased() //Show calendar and schedule when
     m_centerViewBetsPanel->setLayout(m_centerViewBetsLayout);
     m_mainLayout->addWidget(m_centerViewBetsPanel, 0, 2); //Adding schedule Panel as the center panel
   }
+  
+    
+  std::map<int, Bet*> betMap = Cache::getBets();
+  std::pair<int, Bet*> individualBet;
+
+  BOOST_FOREACH(individualBet, betMap) {
+    std::string x = individualBet.second->getTitle();
+    std::cout << x << std::endl;
+    // QString fName = QString::fromStdString(individualBet.second->getTitle());   
+    // QString label = QString::fromStdString("Bet ID: ");
+    // m_centerDisplayFighter->addItem(label + fName);  
+  }
+  
 
 
   removeCenterPanel(); //remove any other window

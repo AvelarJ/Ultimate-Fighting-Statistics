@@ -352,6 +352,9 @@ void Cache::updateCacheFromFile() {
                 }
             }
             myfile.close(); // close file input stream
+            
+            Bet newBet(1,"newBet",25,2,3,3,true,true);
+            addBet(1,&newBet);
 
             for(long unsigned int i = 0; i < rawFighters.size(); i++) { // loop through raw fighter strings
                 Fighter* fighter = parseFighter(rawFighters[i]); // deserialize fighter into heap allocated object
